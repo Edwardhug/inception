@@ -6,4 +6,7 @@ wp config create	--allow-root \
 					--dbpass=$SQL_PASSWORD \
 					--dbhost=mariadb:3306 --path='/var/www/wordpress'
 
+mkdir -p /run/php/
+/usr/sbin/php-fpm7.3 -F 
+
 					
