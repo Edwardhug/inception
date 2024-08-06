@@ -1,10 +1,12 @@
-all: up
+NAME	=	./srcs/docker-compose.yml 
 
-up: docker-compose -f srcs/docker-compose.yml up -d --build
+start:
+		docker-compose -f $(NAME) up --build
 
-down: docker-compose -f srcs/docker-compose.yml down
+stop:
+		docker-compose -f $(NAME) down -v 
 
-clean: down
-	docker system prune -a
+mariadb:
+		docker-compose -f $(NAME) up -d mariadb
 
-.PHONY: all up down clean
+PHONY: start stop
