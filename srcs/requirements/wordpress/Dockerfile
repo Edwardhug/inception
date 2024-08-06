@@ -19,7 +19,7 @@ RUN wget https://fr.wordpress.org/wordpress-6.0-fr_FR.tar.gz -P /var/www
 RUN cd /var/www && tar -xzf wordpress-6.0-fr_FR.tar.gz && rm wordpress-6.0-fr_FR.tar.gz
 
 COPY conf/www.conf /etc/php/7.3/fpm/pool.d/www.conf
-COPY conf/auto_config.sh /var/
+# COPY conf/auto_config.sh /var/
 
 # giving root rights
 
