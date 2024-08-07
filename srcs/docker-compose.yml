@@ -55,13 +55,13 @@ volumes:
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: '/home/lucien/data/wordpress'
+      device: '/home/lucien/Documents/incep_data/wordpress'
   mariadb:
     driver: local
     driver_opts:
       type: 'none'
       o: 'bind'
-      device:  '/home/lucien/data/mariadb' # '/home/lgabet/data/mariadb'
+      device:  '/home/lucien/Documents/incep_data/mariadb' # '/home/lgabet/data/mariadb'
 
 networks:
   inception:
