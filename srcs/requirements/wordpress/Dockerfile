@@ -1,32 +1,16 @@
 FROM debian:buster
-
-RUN apt update -y && \
-	apt upgrade -y && \
-	apt install vim -y && \
-	apt-get -y install wget
-
-RUN apt-get install -y php7.3\
-	php-fpm\
-	php-mysql\
-	mariadb-client
-
-# installation of wordpress
-
-RUN wget https://fr.wordpress.org/wordpress-6.0-fr_FR.tar.gz -P /var/www
-
-# decompresion
-
-RUN cd /var/www && tar -xzf wordpress-6.0-fr_FR.tar.gz && rm wordpress-6.0-fr_FR.tar.gz
-
+RUN apt update -y &&\
+    apt upgrade -y &&\ 
+    apt install -y wget &&\
+    apt install -y php7.3 \ 
+    php-fpm \ 
+    php-mysql \ 
+    mariadb-client
+RUN mkdir -p /var/www/wordpress
 COPY conf/www.conf /etc/php/7.3/fpm/pool.d/www.conf
-# COPY conf/auto_config.sh /var/
-
-# giving root rights
-
-RUN		chown -R root:root /var/www/wordpress
-
-RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-
-RUN chmod +x wp-cli.phar
-RUN mv wp-cli.phar /usr/local/bin/wp
-
+RUN wget https://github.com/wp-cli/wp-cli-bundle/releases/download/v2.7.0/wp-cli-2.7.0.phar
+RUN chmod +x wp-cli-2.7.0.phar
+RUN mv wp-cli-2.7.0.phar /usr/local/bin/wp
+COPY conf/auto-conf.sh /var/
+ENTRYPOINT [ "sh", "/var/auto-conf.sh"]
+EXPOSE 9000
