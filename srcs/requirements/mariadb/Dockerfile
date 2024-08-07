@@ -5,19 +5,16 @@ ARG SQL_USER
 ARG SQL_PASSWORD
 ARG SQL_ROOT_PASSWORD
 
-RUN apt update -y
-RUN apt upgrade -y
-RUN apt install vim -y
+RUN apt update -y && apt upgrade -y && apt-get install -y vim mariadb-server
 
-RUN apt-get install mariadb-server -y
+COPY conf/50-server.cnf /etc/mysql/mariadb.conf.d/
 
-COPY conf/50-server.cnf	/etc/mysql/mariadb.conf.d/50-server.cnf
+# Use a script to initialize the database to avoid issues with long commands in Dockerfile
+COPY conf/init-db.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/init-db.sh
 
-RUN service mysql start && \
-	mysql -e "CREATE DATABASE IF NOT EXISTS \`${SQL_DATABASE}\`; \
-	GRANT ALL PRIVILEGES ON \`${SQL_DATABASE}\`.* TO \`${SQL_USER}\`@'%' IDENTIFIED BY '${SQL_PASSWORD}'; \
-	ALTER USER 'root'@'localhost' IDENTIFIED BY '${SQL_ROOT_PASSWORD}';\
-	FLUSH PRIVILEGES;" && \
-	mysqladmin -u root -p$SQL_ROOT_PASSWORD shutdown
+RUN /usr/local/bin/init-db.sh
 
 CMD ["mysqld_safe"]
+
+EXPOSE 3306
