@@ -11,9 +11,18 @@ RUN apt update -y && \
     vim \
     mariadb-server
 
+# COPY conf/50-server.cnf /etc/mysql/mariadb.conf.d/
+# COPY conf/init.sql /docker-entrypoint-initdb.d/
+
+# CMD ["mysqld_safe"]
 COPY conf/50-server.cnf /etc/mysql/mariadb.conf.d/
 COPY conf/init.sql /docker-entrypoint-initdb.d/
+COPY conf/entrypoint.sh /entrypoint.sh
 
-CMD ["mysqld_safe"]
+# Give execution permission to entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+CMD ["/entrypoint.sh"]
+
 
 EXPOSE 3306

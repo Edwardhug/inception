@@ -1,6 +1,11 @@
 #!/bin/bash
 
-sleep 10
+WP_PATH='/var/www/wordpress'
+
+until mysqladmin ping -h"mariadb" --silent; do
+    echo "Waiting for database connection..."
+    sleep 2
+done
 
 if [ ! -f "/var/www/wordpress/wp-config.php" ]; then
     if [ ! "$(ls -A /var/www/wordpress)" ]; then 
