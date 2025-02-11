@@ -1,6 +1,6 @@
 #!/bin/bash
 
-WP_PATH='/var/www/wordpress'
+PATH_WP='/var/www/wordpress'
 
 until mysqladmin ping -h"mariadb" --silent; do
     echo "Waiting for database connection..."
@@ -9,7 +9,7 @@ done
 
 if [ ! -f "/var/www/wordpress/wp-config.php" ]; then
     if [ ! "$(ls -A /var/www/wordpress)" ]; then 
-        wp core download --path=$PATH_WD --allow-root
+        wp core download --path=$PATH_WP --allow-root
 	fi
 	wp config create	--allow-root \
 						--dbname=$SQL_DATABASE \
@@ -19,11 +19,19 @@ if [ ! -f "/var/www/wordpress/wp-config.php" ]; then
 
 	wp core install --url=lgabet.42.fr \
 	                --title=lgabetWordpress \
-	                --admin_user=$ADMIN_NAME \
+	                --admin_user=$ADMIN_USER \
 	                --admin_password=$ADMIN_PASSWORD \
 	                --admin_email=$ADMIN_MAIL \
 	                --allow-root \
-	                --path=$PATH_WD
+	                --path=$PATH_WP
+	
+	wp user create  $WP_USER \
+                    $WP_MAIL \
+                    --user_pass=$WP_PWD \
+                    --role=contributor \
+                    --allow-root \
+                    --path=$PATH_WP
+
 fi
 
 mkdir -p /run/php/
